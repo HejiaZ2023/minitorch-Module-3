@@ -42,7 +42,9 @@ def index_to_position(index: Index, strides: Strides) -> int:
     Returns:
         Position in storage
     """
-    ret: int = np.dot(index, strides)
+    ret = 0
+    for idx, sti in zip(index, strides):
+        ret += idx * sti
     return ret
     # raise NotImplementedError("Need to implement for Task 2.1")
 
@@ -60,9 +62,10 @@ def to_index(ordinal: int, shape: Shape, out_index: OutIndex) -> None:
         out_index : return index corresponding to position.
 
     """
+    remaining_idx = int(ordinal)  # to tell numba its a copy
     for i in range(len(shape) - 1, -1, -1):
-        out_index[i] = ordinal % shape[i]
-        ordinal = ordinal // shape[i]
+        out_index[i] = remaining_idx % shape[i]
+        remaining_idx = remaining_idx // shape[i]
     # raise NotImplementedError("Need to implement for Task 2.1")
 
 

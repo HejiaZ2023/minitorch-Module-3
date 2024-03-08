@@ -220,7 +220,17 @@ class SimpleOps(TensorOps):
 
     @staticmethod
     def matrix_multiply(a: "Tensor", b: "Tensor") -> "Tensor":
-        raise NotImplementedError("Not implemented in this assignment")
+        dim0 = a.shape[0]
+        dim1 = a.shape[1]
+        assert b.shape[0] == dim1
+        dim2 = b.shape[1]
+
+        a = a.view(dim0, dim1, 1)
+        b = b.view(1, dim1, dim2)
+        c = SimpleOps.zip(operators.mul)(a, b)
+        c = SimpleOps.reduce(operators.add)(c, 1)
+        return c
+        # raise NotImplementedError("Not implemented in this assignment")
 
     is_cuda = False
 
